@@ -31,6 +31,8 @@ l'application.
 
 ## Focus sur le problème des `try catch`.
 
+
+
 ## Améliorations prévues
 
 ### Améliorations basiques 
@@ -44,7 +46,13 @@ l'application.
 ### Autre mode de jeu
 
  - Capture de points (il y en a 3)
+ - Death Match par équipes
 
 ## Choix techniques
 
-En ce qui concerne les choix techniques, il a été convenu de garder l'existant. Comme nous aimerions améliorer le serveur de jeu le fait de réécrire l'application.
+### Repirse de l'existant
+
+Comme la période de travail de ce semestre est réduite et que notre objectif est d'étendre les possibilités et les 
+fonctionnalités de l'application, le choix de garder les technologies actuellement utilisées est le plus judicicieux.
+En effet, l'applicaiton a été concue en Java, langage que nous maîtrisons en partie. La montée en compétence est
+donc minimale et nous laisse le tmeps de nous concentrer sur les fonctionnalités que nous avons décidés de concevoir.
