@@ -31,7 +31,8 @@ l'application.
 
 ## Focus sur le problème des `try catch`.
 
-
+En ce qui concerne l'utilisation abusive de `try catch`, elle fait partie des prolbèmes les plus importants. En effet, 
+bien que l'application ne plante pas, la gestion des erreur reste primordiale. 
 
 ## Améliorations prévues
 
@@ -42,6 +43,7 @@ l'application.
  - Nombre de vies
  - Détecter les projectiles sans détecter les siens
  - Ne plus détecter les joueurs morts
+ - Gestion des équipes
 
 ### Autre mode de jeu
 
