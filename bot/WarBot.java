@@ -36,6 +36,7 @@ import androidgameserver.environment.worldElements.Projectile;
 public class WarBot extends BotBody2D{
 	int score = 0;
     private int lives = AppDefines.maxLives;
+    private boolean eliminated = false;
 
 	public WarBot(Environment2DMultiBot env)
 	{
@@ -66,31 +67,40 @@ public class WarBot extends BotBody2D{
 		addActuator("GunTrav",tra);		
 	}
 
-    public int getLives(){
+
+
+    public int getLives() {
         return lives;
     }
 
-    public void loseLife(){
-        lives--;
+    public void loseLife() {
+        if (lives > 0) {
+            lives--;
+        }
     }
 
     public boolean isDead() {
         return lives <= 0;
     }
 
-	public void addContact(PhysicalElement2D obj) {
-		super.addContact(obj);
-		if (obj instanceof Projectile) {
+    public void addContact(PhysicalElement2D obj) {
+        super.addContact(obj);
+
+        if (eliminated) {
+            return;
+        }
+
+        if (obj instanceof Projectile) {
             loseLife();
 
             if (isDead()) {
+                eliminated = true;
                 environment.removeBot(this);
-                removeBotFromWorld();
             } else {
                 environment.botToPenalty(this);
             }
         }
-	}
+    }
 	
 	public void hitTarget(BotBody2D obj) {
 		score++;

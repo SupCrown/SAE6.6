@@ -406,15 +406,6 @@ public class Env2DViewer extends JPanel{
 		    	g.drawString(bot.message,toPix(bot.body.getPosition().x)+offsetX-(fontMetrics.stringWidth(bot.message)/2), toPix(bot.body.getPosition().y+(float)(bot.size*2))+offsetY);	
 			}
 		}
-        if (bot instanceof WarBot) {
-            WarBot wb = (WarBot) bot;
-            String livesText = "♥ " + wb.getLives();
-            g.drawString(
-                    livesText,
-                    toPix(bot.body.getPosition().x) + offsetX - (fontMetrics.stringWidth(livesText) / 2),
-                    toPix(bot.body.getPosition().y - (float)(bot.size * 3)) + offsetY
-            );
-        }
 	}
 
 	private void drawBotBodyCircle(Graphics g, BotBody2D bot) {
