@@ -36,7 +36,8 @@ import androidgameserver.environment.worldElements.Projectile;
 public class WarBot extends BotBody2D{
 	int score = 0;
     private int lives = AppDefines.maxLives;
-    private boolean eliminated = false;
+    private boolean dead = false;
+    private long respawnTick = 0;
 
 	public WarBot(Environment2DMultiBot env)
 	{
@@ -73,29 +74,44 @@ public class WarBot extends BotBody2D{
         return lives;
     }
 
+    public boolean isDead() {
+        return dead;
+    }
+
+    public long getRespawnTick() {
+        return respawnTick;
+    }
+
     public void loseLife() {
         if (lives > 0) {
             lives--;
         }
     }
 
-    public boolean isDead() {
-        return lives <= 0;
+    public void die(long currentTick) {
+        dead = true;
+        respawnTick = currentTick + AppDefines.deathRespawnTime;
+        setActive(false);
+    }
+
+    public void respawn() {
+        lives = AppDefines.maxLives;
+        dead = false;
+        setActive(true);
     }
 
     public void addContact(PhysicalElement2D obj) {
         super.addContact(obj);
 
-        if (eliminated) {
+        if (dead) {
             return;
         }
 
         if (obj instanceof Projectile) {
             loseLife();
 
-            if (isDead()) {
-                eliminated = true;
-                environment.removeBot(this);
+            if (lives <= 0) {
+                die(environment.getTick());
             } else {
                 environment.botToPenalty(this);
             }

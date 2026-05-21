@@ -7,6 +7,9 @@ public class AppDefines {
     // Vies
     public static int maxLives = 3;
 
+    // Mort
+    public static long deathRespawnTime = 3000;
+
 	// calculation per sec (or step length): 60 = fine , 30 = cheaper
 	public static float targetFPS2DPhysics = 30.0f;
 	public static float arenaWidth = 100; 

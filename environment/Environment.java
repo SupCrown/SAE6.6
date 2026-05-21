@@ -30,6 +30,7 @@ public class Environment {
 	protected boolean hasObstacles = false;
 	protected boolean hasBorders = true;
 	protected boolean paused = false;
+    protected long tick = 0;
 	private ArrayList<String> messageStrings = new ArrayList<>();
 	private String winMessage = null;
 	
@@ -43,10 +44,14 @@ public class Environment {
 	{
 		
 	}
-	
-	public void doStep() {
 
-	}
+    public void doStep() {
+        tick++;
+    }
+
+    public long getTick() {
+        return tick;
+    }
 /*
 	public void doStep(ScoreCounter scoreCounter, SimulationInterruptFlag interruptFlag) {
 		interruptFlag.registerInterrupt(triggeredInterrupt);

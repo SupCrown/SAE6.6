@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ListIterator;
 
+import androidgameserver.bot.WarBot;
 import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
 
@@ -90,6 +91,24 @@ public class Environment2DMultiBot extends Environment2D {
 			i++;
 		}
 	}
+
+    protected void checkDeadBots() {
+        if (bots.size() <= NOTEAM_ID || bots.get(NOTEAM_ID) == null) {
+            return;
+        }
+
+        for (BotBody2D b : bots.get(NOTEAM_ID)) {
+            if (b instanceof WarBot) {
+                WarBot wb = (WarBot) b;
+
+                if (wb.isDead() && wb.getRespawnTick() <= tick) {
+                    placeBot(wb, 10, 3, 100);
+                    wb.reset();
+                    wb.respawn();
+                }
+            }
+        }
+    }
 
 	private void destructionEffect(BotBody2D b) {
 		Debris d;
