@@ -17,8 +17,7 @@
  *******************************************************************************/
 package androidgameserver.bot;
 
-import java.util.ArrayList;
-
+import androidgameserver.AppDefines;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
@@ -30,13 +29,14 @@ import androidgameserver.bot.elements.A_Gun;
 import androidgameserver.bot.elements.A_GunTraverse;
 import androidgameserver.bot.elements.A_Wheel;
 import androidgameserver.environment.CollisionDefines;
-import androidgameserver.environment.Environment2D;
 import androidgameserver.environment.Environment2DMultiBot;
 import androidgameserver.environment.worldElements.PhysicalElement2D;
 import androidgameserver.environment.worldElements.Projectile;
 
 public class WarBot extends BotBody2D{
 	int score = 0;
+    private int lives = AppDefines.maxLives;
+    private boolean eliminated = false;
 
 	public WarBot(Environment2DMultiBot env)
 	{
@@ -67,13 +67,40 @@ public class WarBot extends BotBody2D{
 		addActuator("GunTrav",tra);		
 	}
 
-	public void addContact(PhysicalElement2D obj) {
-		super.addContact(obj);
-		if(obj instanceof Projectile)
-		{
-			environment.botToPenalty(this);
-		}
-	}
+
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void loseLife() {
+        if (lives > 0) {
+            lives--;
+        }
+    }
+
+    public boolean isDead() {
+        return lives <= 0;
+    }
+
+    public void addContact(PhysicalElement2D obj) {
+        super.addContact(obj);
+
+        if (eliminated) {
+            return;
+        }
+
+        if (obj instanceof Projectile) {
+            loseLife();
+
+            if (isDead()) {
+                eliminated = true;
+                environment.removeBot(this);
+            } else {
+                environment.botToPenalty(this);
+            }
+        }
+    }
 	
 	public void hitTarget(BotBody2D obj) {
 		score++;

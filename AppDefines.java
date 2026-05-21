@@ -3,6 +3,10 @@ package androidgameserver;
 public class AppDefines {
 
 	// ENVIRONMENT
+
+    // Vies
+    public static int maxLives = 3;
+
 	// calculation per sec (or step length): 60 = fine , 30 = cheaper
 	public static float targetFPS2DPhysics = 30.0f;
 	public static float arenaWidth = 100; 

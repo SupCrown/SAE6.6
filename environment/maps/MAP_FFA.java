@@ -64,10 +64,11 @@ public class MAP_FFA extends Environment2DMultiBot {
 		if (AppDefines.scoreLimit > 0)
 			addMessage("Score : Name  (Match in " + AppDefines.scoreLimit + " points):");
 		else
-			addMessage("Score : Name");
+            addMessage("Score : Vies : Name");
 		if (getBots() != null && getBots().size() > 0) {
 			for (BotBody2D b : getBots().get(NOTEAM_ID)) {
-				addMessage(((WarBot) b).getScore() + "       " + b.getName());
+                WarBot wb = (WarBot) b;
+                addMessage(wb.getScore() + "       ♥ " + wb.getLives() + "       " + b.getName());
 				if (AppDefines.scoreLimit > 0 && ((WarBot) b).getScore() >= AppDefines.scoreLimit)
 					winner = ((WarBot) b);
 			}
