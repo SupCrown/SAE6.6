@@ -26,7 +26,7 @@ public class AndroidGameServer {
 	protected static long timePrev = 0;
 	protected static float throttleDelay = 4;
 	
-	protected static ArrayList<AIController> ai = new ArrayList<>();
+	protected static ArrayList<AIController> aiBots = new ArrayList<>();
 	
 	public static void main(String[] args) {
 		createAndShowGUI();
@@ -42,23 +42,23 @@ public class AndroidGameServer {
 	
 	public static void runTask()
 	{
-		map.preRunOps();
+		//map.preRunOps();
 		while(!endTask)
 		{
 			map.reset();
-			map.preRepetitionOps();
+			//map.preRepetitionOps();
 			while(!endTask && !map.hasTriggeredInterrupt())
 			{
 				if(throttleDelay <= 0 || System.currentTimeMillis()-timePrev>throttleDelay)
 				{
 					if(!map.isPaused())
 					{
-						map.preStepOps();
+						//map.preStepOps();
 						map.doWorldStep();
 						map.doStep();
 						map.postStepOps();	
-						for(AIController a : ai)
-							a.doStep();
+						for(AIController ai : aiBots)
+							ai.doStep();
 					}
 					envframe.repaint();
 					timePrev = System.currentTimeMillis();			
@@ -75,7 +75,7 @@ public class AndroidGameServer {
 			}
 			map.postRepetitionOps();
 		}
-		map.postRunOps();
+		//map.postRunOps();
 	}
 
 	private static void createAndShowGame() {
@@ -103,7 +103,7 @@ public class AndroidGameServer {
 			bot.registerBotToWorld();
 			if(AndroidGameServer.getMap().placeBot(bot,10,3, 100))
 			{
-				ai.add(new AIRandom(bot));
+				aiBots.add(new AIRandom(bot));
 				bot.setActive(true);
 			}
 			else
@@ -120,7 +120,7 @@ public class AndroidGameServer {
 		bot.registerBotToWorld();
 		if(AndroidGameServer.getMap().placeBot(bot,10,3, 100))
 		{
-			ai.add(new AIDumb(bot));
+			aiBots.add(new AIDumb(bot));
 			bot.setActive(true);
 		}
 		else
@@ -132,10 +132,10 @@ public class AndroidGameServer {
 	
 	public static synchronized void removeBots()
 	{
-		for(AIController a : ai)
+		for(AIController a : aiBots)
 		{
 			a.remove();
 		}
-		ai.clear();
+		aiBots.clear();
 	}
 }
