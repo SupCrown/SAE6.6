@@ -8,7 +8,7 @@ public class AppDefines {
     public static int maxLives = 3;
 
     // Mort
-    public static long deathRespawnTime = 3000;
+    public static long deathRespawnTime = 1000;
 
 	// calculation per sec (or step length): 60 = fine , 30 = cheaper
 	public static float targetFPS2DPhysics = 30.0f;

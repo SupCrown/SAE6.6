@@ -127,17 +127,20 @@ public class WarBot extends BotBody2D{
 		Projectile ret = null;
 		double tmpDist;
 		double ndist = -1;
-		for (BotBody2D B : environment.getBots().get(0))
-		{
-			if (!B.equals(this))
-			{
-			for (Projectile P : environment.getProjectiles().get(B))
-			{
+        for (BotBody2D B : environment.getBots().get(0))
+        {
+            if (B instanceof WarBot && ((WarBot) B).isDead()) {
+                continue;
+            }
+
+            if (!B.equals(this))
+            {
+                for (Projectile P : environment.getProjectiles().get(B)){
 					tmpDist = MathUtils.distance(P.getWorldPosition(), getWorldPosition());
 					if ((ndist < 0)||(tmpDist <= ndist && tmpDist >0)){
 							ndist = tmpDist;
 							ret = P;
-					}					
+					}
 				}
 			}
 		}

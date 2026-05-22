@@ -101,10 +101,11 @@ public class Environment2DMultiBot extends Environment2D {
             if (b instanceof WarBot) {
                 WarBot wb = (WarBot) b;
 
-                if (wb.isDead() && wb.getRespawnTick() <= tick) {
-                    placeBot(wb, 10, 3, 100);
-                    wb.reset();
+                if (wb.isDead() && wb.getRespawnTick() <= getTick()) {
                     wb.respawn();
+
+                    // remet le joueur sur la map
+                    placeBot(wb, 10, 3, 100);
                 }
             }
         }
@@ -184,10 +185,10 @@ public class Environment2DMultiBot extends Environment2D {
 	}
 
 	@Override
-	public void postStepOps() {
-		super.postStepOps();
-		checkPenalty();
-	}
+    public void postStepOps() {
+        checkPenalty();
+        checkDeadBots();
+    }
 
 	protected boolean checkElementPositionConficts(Vec2 wp, float s) {
 
