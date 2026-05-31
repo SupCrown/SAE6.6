@@ -33,7 +33,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -261,15 +260,11 @@ public class Env2DViewer extends JPanel{
         		drawBackground(g);
         	if(env.getBots() != null)
         	{
-        		try {
-            	for(int i = 0 ; i < env.getBots().size(); i++)
-            	{
-                	for(BotBody2D b : env.getBots().get(i))
-                       	drawBot(g,b);               	            		
-            	}}
-        		catch(ConcurrentModificationException | NullPointerException e)
-        		{
-        			// better luck next frame
+        		ArrayList<ArrayList<BotBody2D>> botsSnapshot = new ArrayList<>(env.getBots());
+        		for (int i = 0; i < botsSnapshot.size(); i++) {
+        			ArrayList<BotBody2D> team = new ArrayList<>(botsSnapshot.get(i));
+        			for (BotBody2D b : team)
+        				drawBot(g, b);
         		}
         	}
             
@@ -281,22 +276,17 @@ public class Env2DViewer extends JPanel{
 			// if(rewardScore != null)
 			//	g.drawString("Reward : " + decFormat.format(rewardScore.getCurrentScore()),toPix(env.getCorners()[2].x)+offsetX,toPix(env.getCorners()[2].y)+offsetY+100);	
 			// g.drawString("tick : " + env.getTick(),toPix(env.getCorners()[2].x)+offsetX,toPix(env.getCorners()[2].y)+offsetY+150);	
-			try {
-			for (int i = 0 ; i < env.getMessageStrings().size(); i++)
-			{
-				g.drawString(env.getMessageStrings().get(i),toPix(env.getCorners()[2].x+20)+offsetX + 20,toPix(env.getCorners()[2].y)+offsetY+ (i * 20));	
-			}		
-			if(env.getWinMessage() != null)
-			{
-		        g.setColor(currentTheme.debrisColor);
+			ArrayList<String> messages = new ArrayList<>(env.getMessageStrings());
+			for (int i = 0; i < messages.size(); i++) {
+				g.drawString(messages.get(i), toPix(env.getCorners()[2].x+20)+offsetX + 20, toPix(env.getCorners()[2].y)+offsetY+ (i * 20));
+			}
+			String winMsg = env.getWinMessage();
+			if (winMsg != null) {
+				g.setColor(currentTheme.debrisColor);
 				g.setFont(winnerFont);
-				g.drawString(env.getWinMessage(),
-						offsetX-(winnerFontMetrics.stringWidth(env.getWinMessage())/2),
+				g.drawString(winMsg,
+						offsetX-(winnerFontMetrics.stringWidth(winMsg)/2),
 						offsetY-(winnerFontMetrics.getHeight()/2));
-				
-			}}catch(Exception e)
-			{
-				// who cares 
 			}
 			}
 
@@ -454,26 +444,21 @@ public class Env2DViewer extends JPanel{
 	}
 	
 	private void drawWorldElements(Graphics g) {
-		try {
-		for(VirtualWorldElement we: env.getWorldElements())
+		ArrayList<VirtualWorldElement> elements = new ArrayList<>(env.getWorldElements());
+		for (VirtualWorldElement we : elements) {
+			if(we instanceof TriggerZone)
 			{
-				if(we instanceof TriggerZone)
-				{
-					drawStaticBox(g,(TriggerZone)we,currentTheme.virtualColor);
-					g.drawString(((TriggerZone)we).name, toPix(((TriggerZone)we).worldPosition.x-((TriggerZone)we).size)+offsetX, toPix(((TriggerZone)we).worldPosition.y-((TriggerZone)we).size)+offsetY);
-				}
-				else if(we instanceof TargetObject)
-					drawCircle(g,(WorldElement)we,((WorldElement)we).getColor());
-				else if(we instanceof Projectile)
-					drawCircle(g,(WorldElement)we,currentTheme.projectileColor);
-				else if(we instanceof Debris)
-					drawCircleFilled(g,(WorldElement)we,currentTheme.debrisColor);
-				else
-					drawOther(g,(VirtualWorldElement)we,currentTheme.other);
+				drawStaticBox(g,(TriggerZone)we,currentTheme.virtualColor);
+				g.drawString(((TriggerZone)we).name, toPix(((TriggerZone)we).worldPosition.x-((TriggerZone)we).size)+offsetX, toPix(((TriggerZone)we).worldPosition.y-((TriggerZone)we).size)+offsetY);
 			}
-		}
-		catch (Exception e) {
-			//i don't care about concurrent modification
+			else if(we instanceof TargetObject)
+				drawCircle(g,(WorldElement)we,((WorldElement)we).getColor());
+			else if(we instanceof Projectile)
+				drawCircle(g,(WorldElement)we,currentTheme.projectileColor);
+			else if(we instanceof Debris)
+				drawCircleFilled(g,(WorldElement)we,currentTheme.debrisColor);
+			else
+				drawOther(g,(VirtualWorldElement)we,currentTheme.other);
 		}
 	}
 	

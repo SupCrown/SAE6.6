@@ -65,12 +65,17 @@ public class ClientHandler implements Runnable{
 						quit();
 						System.out.println("Client " + this.soc + " timed out ");
 					}
-				} catch (IOException | NullPointerException e) {
+				} catch (IOException e) {
 					run = false;
 					closeSocket();
 					quit();
-					System.out.println("Client " + this.soc + " timed out ");
-					System.out.println(e);
+					System.out.println("Client " + this.soc + " connection error: " + e.getMessage());
+				} catch (NullPointerException e) {
+					run = false;
+					closeSocket();
+					quit();
+					System.err.println("Null reference in client handler for " + this.soc + ": " + e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		} else {
@@ -86,8 +91,7 @@ public class ClientHandler implements Runnable{
 			try {
 				this.soc.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Error closing socket: " + e.getMessage());
 			}
 		}
 		System.out.println("Connection closed");
