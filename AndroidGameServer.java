@@ -31,12 +31,8 @@ public class AndroidGameServer {
 	public static void main(String[] args) {
 		createAndShowGUI();
 		createAndShowGame();
-		try {
-			serv = new ServerThread(port);
-			serv.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
+		serv = new ServerThread(port);
+		serv.start();
 		runTask();
 	}
 	
@@ -68,9 +64,8 @@ public class AndroidGameServer {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e1) {
-						
-						e1.printStackTrace();
-					}					
+						Thread.currentThread().interrupt();
+					}				
 				}				
 			}
 			map.postRepetitionOps();

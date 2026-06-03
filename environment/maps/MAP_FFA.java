@@ -8,6 +8,9 @@ import androidgameserver.bot.BotBody2D;
 import androidgameserver.bot.WarBot;
 import androidgameserver.environment.Environment2DMultiBot;
 
+import java.util.Comparator;
+import java.util.List;
+
 public class MAP_FFA extends Environment2DMultiBot {
 	WarBot winner = null;
 
@@ -65,8 +68,10 @@ public class MAP_FFA extends Environment2DMultiBot {
 			addMessage("Score : Name  (Match in " + AppDefines.scoreLimit + " points):");
 		else
             addMessage("Score : Vies : Name");
-        if (getBots() != null && getBots().size() > 0) {
-            for (BotBody2D b : getBots().get(NOTEAM_ID)) {
+		if (getBots() != null && getBots().size() > 0) {
+            List<BotBody2D> bots = getBots().get(NOTEAM_ID);
+            bots.sort(Comparator.comparingInt(o -> ((WarBot) o).getScore() * (-1)));
+			for (BotBody2D b : bots) {
                 WarBot wb = (WarBot) b;
 
                 if (!wb.isDead()) {

@@ -241,7 +241,7 @@ public class Environment2DMultiBot extends Environment2D {
 			clazz = Class.forName("androidgameserver.bot." + botModel);
 			botConstructor = clazz.getConstructor(Environment2DMultiBot.class);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException e) {
-			System.out.println("bot 2D type not found : " + botModel);
+			System.err.println("Bot constructor not found for type '" + botModel + "': " + e.getMessage());
 		}
 	}
 
@@ -259,7 +259,7 @@ public class Environment2DMultiBot extends Environment2D {
 			projectiles.put(bot, new ArrayList<Projectile>());
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Failed to instantiate bot of type '" + botConstructor.getName() + "': " + e.getMessage());
 			e.printStackTrace();
 		}
 		return bot;
