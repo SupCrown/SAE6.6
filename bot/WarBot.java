@@ -98,6 +98,10 @@ public class WarBot extends BotBody2D{
         lives = AppDefines.maxLives;
         dead = false;
         setActive(true);
+
+        if (body != null) {
+            body.setActive(true);
+        }
     }
 
     public void addContact(PhysicalElement2D obj) {

@@ -100,11 +100,9 @@ public class Environment2DMultiBot extends Environment2D {
         for (BotBody2D b : bots.get(NOTEAM_ID)) {
             if (b instanceof WarBot) {
                 WarBot wb = (WarBot) b;
-
                 if (wb.isDead() && wb.getRespawnTick() <= getTick()) {
+                    wb.reset();
                     wb.respawn();
-
-                    // remet le joueur sur la map
                     placeBot(wb, 10, 3, 100);
                 }
             }

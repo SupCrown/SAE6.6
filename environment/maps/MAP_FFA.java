@@ -81,10 +81,11 @@ public class MAP_FFA extends Environment2DMultiBot {
                 WarBot wb = (WarBot) b;
 
                 if (wb.isDead()) {
-                    long remaining = wb.getRespawnTick() - getTick();
-                    if (remaining < 0) remaining = 0;
+                    long remainingTicks = wb.getRespawnTick() - getTick();
+                    long remainingSeconds = remainingTicks / 50;
+                    if (remainingSeconds < 0) remainingSeconds = 0;
 
-                    addMessage(b.getName() + "       " + remaining);
+                    addMessage(b.getName() + "       " + remainingSeconds + "s");
                 }
             }
         }
