@@ -225,25 +225,34 @@ public class BotBody2D extends WorldElement{
 		message = msg.substring(0, Math.min(msg.length(), AppDefines.messageLength));
 		messageTime = environment.getTick();
 	}
-	
-	public BotBody2D getClosestBot()
-	{
-		BotBody2D ret = null;
-		double tmpDist;
-		double ndist = -1;
-		for (BotBody2D B : environment.getBots().get(0))
-			{
-				if (!B.equals(this))
-				{
-					tmpDist = MathUtils.distance(B.getWorldPosition(), getWorldPosition());
-					if ((ndist < 0)||(tmpDist <= ndist && tmpDist >0)){
-							ndist = tmpDist;
-							ret = B;
-					}					
-				}
-		}
-		return ret;
-	}
+
+    public BotBody2D getClosestBot()
+    {
+        BotBody2D ret = null;
+        double tmpDist;
+        double ndist = -1;
+
+        for (BotBody2D B : environment.getBots().get(0))
+        {
+
+            if (B.equals(this)) {
+                continue;
+            }
+
+            if (B instanceof WarBot && ((WarBot) B).isDead()) {
+                continue;
+            }
+
+            tmpDist = MathUtils.distance(B.getWorldPosition(), getWorldPosition());
+
+            if ((ndist < 0) || (tmpDist <= ndist && tmpDist > 0)) {
+                ndist = tmpDist;
+                ret = B;
+            }
+        }
+
+        return ret;
+    }
 
 	public void setClientHandler(ClientHandler clienth) {
 		this.clienth = clienth;

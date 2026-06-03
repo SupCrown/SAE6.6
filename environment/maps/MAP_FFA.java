@@ -73,12 +73,27 @@ public class MAP_FFA extends Environment2DMultiBot {
             bots.sort(Comparator.comparingInt(o -> ((WarBot) o).getScore() * (-1)));
 			for (BotBody2D b : bots) {
                 WarBot wb = (WarBot) b;
-                addMessage(wb.getScore() + "       ♥ " + wb.getLives() + "       " + b.getName());
-				if (AppDefines.scoreLimit > 0 && ((WarBot) b).getScore() >= AppDefines.scoreLimit)
-					winner = ((WarBot) b);
-			}
 
-		}
+                if (!wb.isDead()) {
+                    addMessage(wb.getScore() + "       ♥ " + wb.getLives() + "       " + b.getName());
+                }
+            }
+
+            addMessage("");
+            addMessage("Morts : Réapparition");
+
+            for (BotBody2D b : getBots().get(NOTEAM_ID)) {
+                WarBot wb = (WarBot) b;
+
+                if (wb.isDead()) {
+                    long remainingTicks = wb.getRespawnTick() - getTick();
+                    long remainingSeconds = remainingTicks / 50;
+                    if (remainingSeconds < 0) remainingSeconds = 0;
+
+                    addMessage(b.getName() + "       " + remainingSeconds + "s");
+                }
+            }
+        }
 		if (winner != null) {
 			setWinMessage(winner.getName() + " wins !");
 			paused = true;
