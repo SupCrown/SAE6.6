@@ -111,10 +111,6 @@ public class ClientHandler implements Runnable{
 			if (bot.getActuatorValues().containsKey(kv[0]) && kv.length > 1)
 				bot.getActuatorValues().put(kv[0],
 						Math.min(Math.max(Double.valueOf(kv[1].replace(',', '.')), 0.0), 1.0));
-			else if (kv[0].equals(AppDefines.setColor) && kv.length > 3)
-				bot.setColor(new Color(Integer.valueOf(kv[1]), Integer.valueOf(kv[2]), Integer.valueOf(kv[3])));
-			else if (kv[0].equals(AppDefines.setColor) && kv.length > 1)
-				bot.setColor(new Color(Integer.valueOf(kv[1])));
 			else if (kv[0].equals(AppDefines.setName) && kv.length > 1)
 				bot.setName(kv[1]);
 			else if (kv[0].equals(AppDefines.message) && kv.length > 1) {
@@ -172,12 +168,10 @@ public class ClientHandler implements Runnable{
 
 	private String makeNameList() {
 		String list = "";
-		for (ArrayList<BotBody2D> l : bot.getEnvironment().getBots()) {
-			for (BotBody2D b : l) {
-				if (list != "")
-					list += "=";
-				list += b.name;
-			}
+		for (BotBody2D b : bot.getEnvironment().getBots()) {
+			if (list != "")
+				list += "=";
+			list += b.name;
 		}
 		return list;
 	}

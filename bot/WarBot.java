@@ -17,6 +17,8 @@
  *******************************************************************************/
 package androidgameserver.bot;
 
+import java.util.ArrayList;
+
 import androidgameserver.AppDefines;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.MathUtils;
@@ -112,6 +114,11 @@ public class WarBot extends BotBody2D{
         }
 
         if (obj instanceof Projectile) {
+            BotBody2D shooter = ((Projectile) obj).getOwner();
+            // Pas de tir ami : on ne subit des dégâts que si le tireur n'est pas un allié (ni soi-même).
+            if (environment.areAllies(shooter, this)) {
+                return;
+            }
             loseLife();
 
             if (lives <= 0) {
@@ -131,23 +138,28 @@ public class WarBot extends BotBody2D{
 		Projectile ret = null;
 		double tmpDist;
 		double ndist = -1;
-        for (BotBody2D B : environment.getBots().get(0))
+        for (BotBody2D B : environment.getBots())
         {
             if (B instanceof WarBot && ((WarBot) B).isDead()) {
                 continue;
             }
 
-            if (!B.equals(this))
-            {
-                for (Projectile P : environment.getProjectiles().get(B)){
-					tmpDist = MathUtils.distance(P.getWorldPosition(), getWorldPosition());
-					if ((ndist < 0)||(tmpDist <= ndist && tmpDist >0)){
-							ndist = tmpDist;
-							ret = P;
-					}
-				}
-			}
-		}
+            if (B.equals(this) || environment.areAllies(this, B)) {
+                continue; // on ignore ses propres tirs et ceux des alliés : pas une menace
+            }
+
+            ArrayList<Projectile> shots = environment.getProjectiles().get(B);
+            if (shots == null) {
+                continue;
+            }
+            for (Projectile P : shots) {
+                tmpDist = MathUtils.distance(P.getWorldPosition(), getWorldPosition());
+                if ((ndist < 0) || (tmpDist <= ndist && tmpDist > 0)) {
+                    ndist = tmpDist;
+                    ret = P;
+                }
+            }
+        }
 		return ret;
 	}
 

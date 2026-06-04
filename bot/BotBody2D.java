@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import androidgameserver.environment.Team;
 import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -43,11 +44,10 @@ import androidgameserver.environment.worldElements.WorldElement;
 
 public class BotBody2D extends WorldElement{
 	private boolean active = false;
-	public String label = "";
 	public String name = "";
 	public String message = null;
 	public long messageTime;
-	public int ID = 0;
+	public Team BotTeam;
 	public Environment2DMultiBot environment;
 	protected HashMap<String,Actuator> actuators = new HashMap<String,Actuator>();
 	private HashMap<String,Double> actuatorValues = new HashMap<String,Double>();
@@ -153,12 +153,16 @@ public class BotBody2D extends WorldElement{
 
 	public String getName() {
 		return this.name;
-	}	
-
-	public void setLabel(String lab) {
-		this.label = lab;
 	}
-		
+
+	public Team getBotTeam() {
+		return BotTeam;
+	}
+
+	public void setBotTeam(Team botTeam) {
+		BotTeam = botTeam;
+	}
+
 	public void addContact(PhysicalElement2D obj) {
 		if(obj instanceof TargetObject)
 		{
@@ -232,7 +236,7 @@ public class BotBody2D extends WorldElement{
         double tmpDist;
         double ndist = -1;
 
-        for (BotBody2D B : environment.getBots().get(0))
+        for (BotBody2D B : environment.getBots())
         {
 
             if (B.equals(this)) {
@@ -240,6 +244,10 @@ public class BotBody2D extends WorldElement{
             }
 
             if (B instanceof WarBot && ((WarBot) B).isDead()) {
+                continue;
+            }
+
+            if (environment.areAllies(this, B)) { // on ne vise que les adversaires
                 continue;
             }
 

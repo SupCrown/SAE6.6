@@ -28,7 +28,6 @@ import androidgameserver.environment.Environment2DMultiBot;
 
 public class Projectile extends DynamicWorldElement {
 
-	public String label = "";
 	private float force = 1000;
 	Environment2DMultiBot simEnvironment;
 	BotBody2D bot;
@@ -49,7 +48,6 @@ public class Projectile extends DynamicWorldElement {
 		bd.allowSleep = false;
 		simEnvironment = simEnv;
 		bot = ibot;
-		label = bot.label;
 	}
 
 
@@ -63,8 +61,14 @@ public class Projectile extends DynamicWorldElement {
 		body.applyForce(f, body.getPosition());
 	}
 
+	/** Le bot qui a tiré ce projectile (utile pour ne pas toucher ses alliés). */
+	public BotBody2D getOwner() {
+		return bot;
+	}
+
 	public void addContact(PhysicalElement2D obj) {
-		if(obj instanceof WarBot)
+		// Pas de tir ami : on ne marque un point que si la cible n'est pas une alliée du tireur.
+		if(obj instanceof WarBot && !simEnvironment.areAllies(this.bot, (WarBot)obj))
 			((WarBot)this.bot).hitTarget((WarBot)obj);
 		simEnvironment.getProjectileScheduleForRemoval().add(this);
 	}

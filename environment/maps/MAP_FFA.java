@@ -7,7 +7,9 @@ import androidgameserver.ClientHandler;
 import androidgameserver.bot.BotBody2D;
 import androidgameserver.bot.WarBot;
 import androidgameserver.environment.Environment2DMultiBot;
+import androidgameserver.environment.Team;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -69,7 +71,8 @@ public class MAP_FFA extends Environment2DMultiBot {
 		else
             addMessage("Score : Vies : Name");
 		if (getBots() != null && getBots().size() > 0) {
-            List<BotBody2D> bots = getBots().get(NOTEAM_ID);
+            // copie pour l'affichage : on ne réordonne pas la liste partagée (lue par le thread de rendu).
+            List<BotBody2D> bots = new ArrayList<>(getBots());
             bots.sort(Comparator.comparingInt(o -> ((WarBot) o).getScore() * (-1)));
 			for (BotBody2D b : bots) {
                 WarBot wb = (WarBot) b;
@@ -82,7 +85,7 @@ public class MAP_FFA extends Environment2DMultiBot {
             addMessage("");
             addMessage("Morts : Réapparition");
 
-            for (BotBody2D b : getBots().get(NOTEAM_ID)) {
+            for (BotBody2D b : getBots()) {
                 WarBot wb = (WarBot) b;
 
                 if (wb.isDead()) {
@@ -103,7 +106,7 @@ public class MAP_FFA extends Environment2DMultiBot {
 	@Override
 	public void postRepetitionOps() {
 		if (getBots() != null && getBots().size() > 0) {
-			for (BotBody2D b : getBots().get(NOTEAM_ID)) {
+			for (BotBody2D b : getBots()) {
 				((WarBot) b).reinit();
 				placeBot(b, 10, 3, 100);
 			}
@@ -113,8 +116,10 @@ public class MAP_FFA extends Environment2DMultiBot {
 	@Override
 	synchronized public BotBody2D addBot(ClientHandler clientHandler) {
 		super.addBot(clientHandler);
-		BotBody2D bot = makeBot("", ClientHandler.makeDefaultName(), NOTEAM_ID,clientHandler);
-		bots.get(NOTEAM_ID).add(bot);
+		// En FFA, chaque bot est seul dans sa propre équipe (id/nom/couleur générés automatiquement).
+		Team team = createTeam();
+		BotBody2D bot = makeBot(ClientHandler.makeDefaultName(), clientHandler, team);
+		bots.add(bot);
 		if (clientHandler != null)
 			clientHandler.setBot(bot);
 		return bot;

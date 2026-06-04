@@ -143,7 +143,6 @@ public class Env2DViewer extends JPanel{
 				fill = !fill;
 			}
 		});
-		ArrayList<ArrayList<BotBody2D>> bots;
 		toolbar.add(fillButton);
 		
 		JButton resetButton = new JButton("Reset Sim");
@@ -260,12 +259,9 @@ public class Env2DViewer extends JPanel{
         		drawBackground(g);
         	if(env.getBots() != null)
         	{
-        		ArrayList<ArrayList<BotBody2D>> botsSnapshot = new ArrayList<>(env.getBots());
-        		for (int i = 0; i < botsSnapshot.size(); i++) {
-        			ArrayList<BotBody2D> team = new ArrayList<>(botsSnapshot.get(i));
-        			for (BotBody2D b : team)
-        				drawBot(g, b);
-        		}
+        		ArrayList<BotBody2D> botsSnapshot = new ArrayList<>(env.getBots());
+        		for (BotBody2D b : botsSnapshot)
+        			drawBot(g, b);
         	}
             
             drawBorders(g);
@@ -550,7 +546,8 @@ public class Env2DViewer extends JPanel{
 		public static Color projectileColor = Color.yellow;
 		public static Color sensorSecondaryColor = Color.darkGray;
 		public static Color other = Color.blue;
-		public static Color [] teamColors = new Color[] {Color.red,Color.magenta,Color.orange,Color.yellow};
+		// Les couleurs d'équipe sont aléatoires (cf. Environment2DMultiBot.createTeam) et appliquées
+		// à chaque bot via Team.addMember -> bot.setColor, donc drawBot() peut se contenter de bot.getColor().
 	}
 	
     
