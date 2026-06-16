@@ -9,6 +9,7 @@ import androidgameserver.aicontrollers.AIDumb;
 import androidgameserver.aicontrollers.AIRandom;
 import androidgameserver.bot.BotBody2D;
 import androidgameserver.environment.Environment2DMultiBot;
+import androidgameserver.environment.maps.MAP_CTP;
 import androidgameserver.environment.maps.MAP_FFA;
 
 public class AndroidGameServer {
@@ -74,7 +75,7 @@ public class AndroidGameServer {
 	}
 
 	private static void createAndShowGame() {
-		map = new MAP_FFA();
+		map = new MAP_CTP();
 		map.init();
 		Env2DViewer viewer = new Env2DViewer(map);
 		envframe = new JFrame("Map");
