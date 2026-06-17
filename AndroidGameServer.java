@@ -20,6 +20,7 @@ public class AndroidGameServer {
 	static public AppFrame frame = null;
 	static public JFrame envframe;
 	static Environment2DMultiBot map;
+    public static String selectedMode = "FFA";
 
 	private static int port = 6969;
 	static ServerThread serv;
@@ -28,14 +29,12 @@ public class AndroidGameServer {
 	protected static float throttleDelay = 4;
 	
 	protected static ArrayList<AIController> ai = new ArrayList<>();
-	
-	public static void main(String[] args) {
-		createAndShowGUI();
-		createAndShowGame();
-		serv = new ServerThread(port);
-		serv.start();
-		runTask();
-	}
+
+    public static void main(String[] args) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new GameModeMenu().setVisible(true);
+        });
+    }
 	
 	public static void runTask()
 	{
@@ -73,6 +72,11 @@ public class AndroidGameServer {
 		}
 		map.postRunOps();
 	}
+
+    public static void startServer() {
+        AndroidGameServer server = new AndroidGameServer();
+        server.runTask();
+    }
 
 	private static void createAndShowGame() {
 		map = new MAP_FFA();
