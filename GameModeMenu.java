@@ -59,8 +59,15 @@ public class GameModeMenu extends JFrame {
         dispose();
 
         System.out.println("Mode choisi : " + mode);
-
         AndroidGameServer.selectedMode = mode;
-        AndroidGameServer.startServer();
+
+        if (mode.equals("FFA")) {
+            new Thread(() -> AndroidGameServer.startServerDirect()).start();
+        } else {
+            TeamWaitingWindow waitingWindow = new TeamWaitingWindow(mode);
+            waitingWindow.setVisible(true);
+
+            new Thread(() -> AndroidGameServer.startServerWithWaitingWindow(waitingWindow)).start();
+        }
     }
 }

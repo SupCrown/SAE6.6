@@ -73,9 +73,46 @@ public class AndroidGameServer {
 		map.postRunOps();
 	}
 
-    public static void startServer() {
-        AndroidGameServer server = new AndroidGameServer();
-        server.runTask();
+    public static void startServerDirect() {
+        createAndShowGUI();
+        createAndShowGame();
+
+        serv = new ServerThread(port);
+        serv.start();
+
+        runTask();
+    }
+
+    public static void startServerWithWaitingWindow(TeamWaitingWindow window) {
+        createAndShowGUI();
+
+        serv = new ServerThread(port);
+        serv.start();
+
+        new Thread(() -> {
+            while (serv.getConnectedPlayerCount() < 2) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            window.updateStatus("2 joueurs connectés. Lancement dans 10 secondes...");
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                window.dispose();
+                createAndShowGame();
+            });
+
+            runTask();
+        }).start();
     }
 
 	private static void createAndShowGame() {
