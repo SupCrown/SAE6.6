@@ -17,7 +17,7 @@ public class AppDefines {
     public static double ObstacleProbability = 0.3;
 
 	//BOT Gameplay
-	public final static String[] gameModes = {"FreeForAll"};
+	public final static String[] gameModes = {"FreeForAll","TeamDeathMatch"};
 	public static int bot_RateOfFire = 100; //ticks
 	public static long penaltyTime = 1000; //ticks
 	public static int connectionTimeoutDelay = 10*1000; // 10 seconds
