@@ -83,47 +83,79 @@ public class AndroidGameServer {
         runTask();
     }
 
+    public static int getPlayerCountInMap() {
+        if (map == null || map.getBots() == null) {
+            return 0;
+        }
+
+        return map.getBots().size();
+    }
+
     public static void startServerWithWaitingWindow(TeamWaitingWindow window) {
         createAndShowGUI();
+
+        createGame();
 
         serv = new ServerThread(port);
         serv.start();
 
         new Thread(() -> {
-            while (serv.getConnectedPlayerCount() < 2) {
+            while (getPlayerCountInMap() < 2) {
+                int count = getPlayerCountInMap();
+                window.updateStatus("Joueurs/bots présents : " + count + " / 2 minimum");
+
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
 
-            window.updateStatus("2 joueurs connectés. Lancement dans 10 secondes...");
-
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (int i = 10; i > 0; i--) {
+                int count = getPlayerCountInMap();
+                window.updateStatus("Joueurs/bots présents : " + count + " | Lancement dans " + i + " secondes...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                window.dispose();
-                createAndShowGame();
-            });
+            try {
+                javax.swing.SwingUtilities.invokeAndWait(() -> {
+                    window.dispose();
+                    showGameWindow();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             runTask();
         }).start();
     }
 
-	private static void createAndShowGame() {
-		map = new MAP_FFA();
-		map.init();
-		Env2DViewer viewer = new Env2DViewer(map);
-		envframe = new JFrame("Map");
-		envframe.add(viewer);
-		envframe.setSize(800, 600);
-		envframe.setVisible(true);
-	}
+    private static void createGame() {
+        if (selectedMode.equals("CTP")) {
+            map = new MAP_CTP();
+        } else {
+            map = new MAP_FFA();
+        }
+
+        map.init();
+    }
+
+    private static void showGameWindow() {
+        Env2DViewer viewer = new Env2DViewer(map);
+        envframe = new JFrame("Map");
+        envframe.add(viewer);
+        envframe.setSize(800, 600);
+        envframe.setVisible(true);
+    }
+
+    private static void createAndShowGame() {
+        createGame();
+        showGameWindow();
+    }
 
 	private static void createAndShowGUI() {
 		frame = new AppFrame();
