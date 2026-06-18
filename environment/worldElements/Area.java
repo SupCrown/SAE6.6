@@ -7,15 +7,9 @@ import org.jbox2d.dynamics.World;
 
 import java.awt.*;
 
-public class Area extends StaticWorldElement{
+public class Area extends TriggerZone {
 
-    public Area(Vec2 worldPos, float size, Color c) {
-        super(worldPos, 0, size);
-        sd.shape = new CircleShape();
-        sd.shape.m_radius = size;
-        sd.friction = 0.0f;
-        sd.density = 2.0f;
-        setColor(c);
-        registerToWorld();
+    public Area(Vec2 worldPos, float size, String label) {
+        super(worldPos, 0, size, label);
     }
 }

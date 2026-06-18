@@ -2,6 +2,7 @@ package androidgameserver.environment.maps;
 
 import androidgameserver.environment.Environment2DMultiBot;
 import androidgameserver.environment.worldElements.Area;
+import androidgameserver.environment.worldElements.VirtualWorldElement;
 import androidgameserver.environment.worldElements.WorldElement;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -11,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MAP_CTP extends MAP_FFA {
-    public static final int AREA_RADIUS = 6;
-    public List<WorldElement> areas = new ArrayList<WorldElement>();
+    public static final int AREA_RADIUS = 18;
+    public List<Area> areas = new ArrayList<>();
 
     public MAP_CTP() {
         super();
@@ -30,25 +31,26 @@ public class MAP_CTP extends MAP_FFA {
     public void loadAreas()
     {
         // générer la première zone aléatoirement
-        Vec2 firstAreaWP = generatePositionInBoundaries(AREA_RADIUS);
+        Vec2 firstAreaWP = generatePositionInBoundaries(AREA_RADIUS+2);
         System.out.println(firstAreaWP);
-        Area firstArea = new Area(firstAreaWP, AREA_RADIUS, Color.BLUE);
+        Area firstArea = new Area(firstAreaWP, AREA_RADIUS, "ALPHA");
+        //firstArea.color = Color.CYAN;
         areas.add(firstArea);
         getWorldElements().add(firstArea);
 
         // générer la deuxième zone sans qu'elle chevauche la première
-        Vec2 secondAreaWP = generatePositionInBoundaries(AREA_RADIUS);
-        while (getDistanteBetween(firstAreaWP, secondAreaWP) <= AREA_RADIUS * 2){
-            secondAreaWP = generatePositionInBoundaries(AREA_RADIUS);
+        Vec2 secondAreaWP = generatePositionInBoundaries(AREA_RADIUS+2);
+        while (getDistanteBetween(firstAreaWP, secondAreaWP) <= AREA_RADIUS * 4){
+            secondAreaWP = generatePositionInBoundaries(AREA_RADIUS+2);
         }
         System.out.println(secondAreaWP);
-        Area secondArea = new Area(secondAreaWP, AREA_RADIUS, Color.RED);
+        Area secondArea = new Area(secondAreaWP, AREA_RADIUS, "BETA");
+        //secondArea.color = Color.pink;
         areas.add(secondArea);
         getWorldElements().add(secondArea);
-
     }
 
-    public List<WorldElement> getAreas()
+    public List<Area> getAreas()
     {
         return areas;
     }

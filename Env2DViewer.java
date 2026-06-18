@@ -88,7 +88,6 @@ public class Env2DViewer extends JPanel{
 	BasicStroke stroke = new BasicStroke(strokeThickness);
 	BasicStroke defaultstroke = new BasicStroke(1);
 	boolean fill = false;
-	static ColorTheme currentTheme = new ColorTheme();
 	
 	JToolBar toolbar = new JToolBar(JToolBar.HORIZONTAL);
 	
@@ -250,7 +249,7 @@ public class Env2DViewer extends JPanel{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
     	((Graphics2D)g).setStroke(stroke);
-        g.setColor(currentTheme.backgroundColor);
+        g.setColor(ColorTheme.backgroundColor);
         g.fillRect(0, 0, this.getWidth(),this.getHeight());
         g.setFont(font);
         if(env!=null)
@@ -267,7 +266,7 @@ public class Env2DViewer extends JPanel{
             drawBorders(g);
             drawObstacles(g);
             drawWorldElements(g);
-			g.setColor(currentTheme.infoFontColor);
+			g.setColor(ColorTheme.infoFontColor);
 			// Score 
 			// if(rewardScore != null)
 			//	g.drawString("Reward : " + decFormat.format(rewardScore.getCurrentScore()),toPix(env.getCorners()[2].x)+offsetX,toPix(env.getCorners()[2].y)+offsetY+100);	
@@ -278,7 +277,7 @@ public class Env2DViewer extends JPanel{
 			}
 			String winMsg = env.getWinMessage();
 			if (winMsg != null) {
-				g.setColor(currentTheme.debrisColor);
+				g.setColor(ColorTheme.debrisColor);
 				g.setFont(winnerFont);
 				g.drawString(winMsg,
 						offsetX-(winnerFontMetrics.stringWidth(winMsg)/2),
@@ -290,7 +289,7 @@ public class Env2DViewer extends JPanel{
     }
 
 	private void drawBackground(Graphics g) {
-		 g.setColor(currentTheme.backgroundPatternColor);
+		 g.setColor(ColorTheme.backgroundPatternColor);
 		 for(int i = toPix(env.getCorners()[0].x)+offsetX ; i < toPix(env.getCorners()[1].x)+offsetX; i+=toPix(4))
 			 g.drawLine(i, toPix(env.getCorners()[0].y)+offsetY,i, toPix(env.getCorners()[3].y)+offsetY);
 		 for(int i = toPix(env.getCorners()[0].y)+offsetY ; i > toPix(env.getCorners()[3].y)+offsetY; i-=toPix(4))
@@ -417,13 +416,13 @@ public class Env2DViewer extends JPanel{
 	}
 
 	private void drawKicker(Graphics g, A_Kicker s) {
-		g.setColor(currentTheme.sensorSecondaryColor);
+		g.setColor(ColorTheme.sensorSecondaryColor);
 		g.drawLine(toPix(s.boundingBoxPointx(1))+offsetX,toPix(s.boundingBoxPointy(1))+offsetY,toPix(s.boundingBoxPointx(2))+offsetX,toPix(s.boundingBoxPointy(2))+offsetY);
 		g.drawLine(toPix(s.boundingBoxPointx(2))+offsetX,toPix(s.boundingBoxPointy(2))+offsetY,toPix(s.boundingBoxPointx(3))+offsetX,toPix(s.boundingBoxPointy(3))+offsetY);
 		g.drawLine(toPix(s.boundingBoxPointx(3))+offsetX,toPix(s.boundingBoxPointy(3))+offsetY,toPix(s.boundingBoxPointx(4))+offsetX,toPix(s.boundingBoxPointy(4))+offsetY);
 		g.drawLine(toPix(s.boundingBoxPointx(4))+offsetX,toPix(s.boundingBoxPointy(4))+offsetY,toPix(s.boundingBoxPointx(1))+offsetX,toPix(s.boundingBoxPointy(1))+offsetY);
 
-		g.setColor(currentTheme.defaultBotColor);
+		g.setColor(ColorTheme.defaultBotColor);
 		int tx =(int)(Math.cos(s.worldAngle)*toPix(s.kickerReach));
 		int ty =(int)(Math.sin(s.worldAngle)*toPix(s.kickerReach));
 		g.drawLine(toPix(s.getWorldPosition().x)+offsetX,toPix(s.getWorldPosition().y)+offsetY,toPix(s.getWorldPosition().x)+offsetX+tx, toPix(s.getWorldPosition().y)+offsetY+ty);
@@ -433,9 +432,9 @@ public class Env2DViewer extends JPanel{
 		for(VirtualWorldElement we: env.getObstacles())
 		{
 			if(we.getClass().toString().equals(ObstacleStaticBox.class.toString())||we.getClass().toString().equals(ObstacleMovingBox.class.toString()))
-				drawStaticBox(g,(ObstacleStaticBox)we,currentTheme.obstacleColor);
+				drawStaticBox(g,(ObstacleStaticBox)we,ColorTheme.obstacleColor);
 			else if(we.getClass().toString().equals(ObstacleStaticCyninder.class.toString()))
-				drawCircle(g,(WorldElement) we,currentTheme.obstacleColor);
+				drawCircle(g,(WorldElement) we,ColorTheme.obstacleColor);
 		}
 	}
 	
@@ -444,17 +443,17 @@ public class Env2DViewer extends JPanel{
 		for (VirtualWorldElement we : elements) {
 			if(we instanceof TriggerZone)
 			{
-				drawStaticBox(g,(TriggerZone)we,currentTheme.virtualColor);
+				drawStaticBox(g,(TriggerZone)we, ((TriggerZone) we).color);
 				g.drawString(((TriggerZone)we).name, toPix(((TriggerZone)we).worldPosition.x-((TriggerZone)we).size)+offsetX, toPix(((TriggerZone)we).worldPosition.y-((TriggerZone)we).size)+offsetY);
 			}
 			else if(we instanceof TargetObject)
 				drawCircle(g,(WorldElement)we,((WorldElement)we).getColor());
 			else if(we instanceof Projectile)
-				drawCircle(g,(WorldElement)we,currentTheme.projectileColor);
+				drawCircle(g,(WorldElement)we,ColorTheme.projectileColor);
 			else if(we instanceof Debris)
-				drawCircleFilled(g,(WorldElement)we,currentTheme.debrisColor);
+				drawCircleFilled(g,(WorldElement)we,ColorTheme.debrisColor);
 			else
-				drawOther(g,(VirtualWorldElement)we,currentTheme.other);
+				drawOther(g,(VirtualWorldElement)we,ColorTheme.other);
 		}
 	}
 	
@@ -517,7 +516,7 @@ public class Env2DViewer extends JPanel{
 	}
 
 	private void drawBorders(Graphics g) {
-		 g.setColor(currentTheme.obstacleColor);
+		 g.setColor(ColorTheme.obstacleColor);
 		 g.drawLine(toPix(env.getCorners()[0].x)+offsetX, toPix(env.getCorners()[0].y)+offsetY,toPix(env.getCorners()[1].x)+offsetX, toPix(env.getCorners()[1].y)+offsetY);
 		 g.drawLine(toPix(env.getCorners()[1].x)+offsetX, toPix(env.getCorners()[1].y)+offsetY,toPix(env.getCorners()[2].x)+offsetX, toPix(env.getCorners()[2].y)+offsetY);
 		 g.drawLine(toPix(env.getCorners()[2].x)+offsetX, toPix(env.getCorners()[2].y)+offsetY,toPix(env.getCorners()[3].x)+offsetX, toPix(env.getCorners()[3].y)+offsetY);
@@ -548,12 +547,6 @@ public class Env2DViewer extends JPanel{
 		public static Color other = Color.blue;
 		// Les couleurs d'équipe sont aléatoires (cf. Environment2DMultiBot.createTeam) et appliquées
 		// à chaque bot via Team.addMember -> bot.setColor, donc drawBot() peut se contenter de bot.getColor().
-	}
-	
-    
-	public static ColorTheme getColorTheme()
-	{
-		return currentTheme;
 	}
 	
     public Environment2D getEnvironment()
