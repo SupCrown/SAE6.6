@@ -1,5 +1,6 @@
 package androidgameserver.environment.maps;
 
+import androidgameserver.ClientHandler;
 import androidgameserver.bot.BotBody2D;
 import androidgameserver.environment.Environment2DMultiBot;
 import androidgameserver.environment.Team;
@@ -17,9 +18,19 @@ public class MAP_CTP extends MAP_FFA {
     public static final int AREA_RADIUS = 18;
     public List<Area> areas = new ArrayList<>();
 
+    private static final Object[][] TEAM_SETUP = {
+            {0, "Red", Color.RED},
+            {1, "Blue", new Color(50, 120, 255)},
+    };
+
+
     public MAP_CTP() {
         super();
         this.name = "CTP";
+        // Création des équipes fixes dès la construction de la carte : elles existent
+        // donc avant la connexion du premier bot (cf. addBot ci-dessous).
+        for (Object[] spec : TEAM_SETUP)
+            getOrCreateTeam((int) spec[0], (String) spec[1], (Color) spec[2]);
     }
 
     @Override
@@ -45,6 +56,15 @@ public class MAP_CTP extends MAP_FFA {
     private void addArea(Vec2 firstAreaWP, String label, Color color) {
         Area firstArea = new Area(firstAreaWP, AREA_RADIUS, label, color);
         getWorldElements().add(firstArea);
+    }
+
+    /** Renvoie l'équipe ayant le moins de membres (la première en cas d'égalité). */
+    private Team pickSmallestTeam() {
+        Team smallest = null;
+        for (Team t : getTeams())
+            if (smallest == null || t.getMembers().size() < smallest.getMembers().size())
+                smallest = t;
+        return smallest;
     }
 
     public List<Area> getAreas()
@@ -97,5 +117,19 @@ public class MAP_CTP extends MAP_FFA {
             }
             area.doStep(team);
         }
+    }
+
+    /**
+     * Connexion d'un bot : on l'affecte à l'équipe la moins peuplée pour garder les
+     * effectifs équilibrés (contrairement au FFA où chaque bot a sa propre équipe).
+     */
+    @Override
+    synchronized public BotBody2D addBot(ClientHandler clientHandler) {
+        Team team = pickSmallestTeam();
+        BotBody2D bot = makeBot(ClientHandler.makeDefaultName(), clientHandler, team);
+        bots.add(bot);
+        if (clientHandler != null)
+            clientHandler.setBot(bot);
+        return bot;
     }
 }
