@@ -17,13 +17,18 @@ import java.util.Enumeration;
 public class ServerThread extends Thread 
 { 
 	int port;
+    private int connectedPlayerCount = 0;
 	
 	
 	public ServerThread(int port) {
 		this.port = port;
 	}
-	
-	public void run() 
+
+    public int getConnectedPlayerCount() {
+        return connectedPlayerCount;
+    }
+
+	public void run()
 	{ 
 		System.out.println("Server thread starting"); 
 		try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -33,6 +38,8 @@ public class ServerThread extends Thread
 			while (true) {
 				Socket socket = serverSocket.accept();
 				System.out.println("New client connected");
+                connectedPlayerCount++;
+                System.out.println("Nombre de joueurs connectés : " + connectedPlayerCount);
 				BufferedReader dis = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter dos = new PrintWriter(socket.getOutputStream());
 				System.out.println("Assigning new thread for this client : "
