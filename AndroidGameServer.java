@@ -75,7 +75,7 @@ public class AndroidGameServer {
 	}
 
 	private static void createAndShowGame() {
-		map = new MAP_FFA();
+		map = new MAP_CTP();
 		map.init();
 		Env2DViewer viewer = new Env2DViewer(map);
 		envframe = new JFrame("Map");
