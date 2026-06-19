@@ -11,6 +11,7 @@ import androidgameserver.bot.BotBody2D;
 import androidgameserver.environment.Environment2DMultiBot;
 import androidgameserver.environment.maps.MAP_CTP;
 import androidgameserver.environment.maps.MAP_FFA;
+import androidgameserver.environment.maps.MAP_TDM;
 
 public class AndroidGameServer {
 
@@ -137,6 +138,8 @@ public class AndroidGameServer {
     private static void createGame() {
         if (selectedMode.equals("CTP")) {
             map = new MAP_CTP();
+        } else if (selectedMode.equals("TDM")) {
+            map = new MAP_TDM();
         } else {
             map = new MAP_FFA();
         }

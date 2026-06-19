@@ -30,7 +30,7 @@ public class GameModeMenu extends JFrame {
 
         JButton ffaButton = new JButton("Free for all");
         JButton ctpButton = new JButton("Capture the points");
-        JButton dmButton = new JButton("Death Match");
+        JButton dmButton = new JButton("Team Death Match");
 
         ffaButton.setPreferredSize(new Dimension(300, 100));
         ctpButton.setPreferredSize(new Dimension(300, 100));
@@ -52,7 +52,7 @@ public class GameModeMenu extends JFrame {
 
         ffaButton.addActionListener(e -> launchGame("FFA"));
         ctpButton.addActionListener(e -> launchGame("CTP"));
-        dmButton.addActionListener(e -> launchGame("DM"));
+        dmButton.addActionListener(e -> launchGame("TDM"));
     }
 
     private void launchGame(String mode) {
