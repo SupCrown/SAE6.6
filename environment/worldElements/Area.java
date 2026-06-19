@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class Area extends TriggerZone {
 
-    public int capture;
+    public float capture;
     public Team team;
     public boolean isBlocked;
     public Color initialColor;
@@ -27,11 +27,12 @@ public class Area extends TriggerZone {
             if (this.team == null) {
                 this.team = team;
                 this.color = team.getColor();
-                capture++;
+                capture += 0.1f;
             } else if (this.team.equals(team) && capture < 100) {
-                capture++;
+                capture += 0.1f;
             } else {
-                if (--capture == 0) {
+                capture -= 0.1f;
+                if (capture < 0) {
                     this.team = null;
                 }
             }
