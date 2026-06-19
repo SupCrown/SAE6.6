@@ -70,4 +70,8 @@ public class Team {
     public List<BotBody2D> getMembers() {
         return members;
     }
+
+    public boolean equals(Team team) {
+        return this.teamId == team.teamId;
+    }
 }

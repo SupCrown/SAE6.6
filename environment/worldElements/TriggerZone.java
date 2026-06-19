@@ -17,10 +17,14 @@
  *******************************************************************************/
 package androidgameserver.environment.worldElements;
 
+import androidgameserver.Env2DViewer;
 import org.jbox2d.common.Vec2;
+
+import java.awt.*;
 
 public class TriggerZone extends VirtualWorldElement {
 	public String name = "Zone";
+    public Color color = Env2DViewer.ColorTheme.virtualColor;
 	
 	public TriggerZone(Vec2 worldPos, float worldAng,float s){
 		super(worldPos, worldAng,s);
