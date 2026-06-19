@@ -53,9 +53,10 @@ public class MAP_CTP extends MAP_FFA {
         addArea(secondAreaWP, "BETA", Color.PINK);
     }
 
-    private void addArea(Vec2 firstAreaWP, String label, Color color) {
-        Area firstArea = new Area(firstAreaWP, AREA_RADIUS, label, color);
-        getWorldElements().add(firstArea);
+    private void addArea(Vec2 wp, String label, Color color) {
+        Area area = new Area(wp, AREA_RADIUS, label, color);
+        areas.add(area);
+        getWorldElements().add(area);
     }
 
     /** Renvoie l'équipe ayant le moins de membres (la première en cas d'égalité). */
@@ -89,15 +90,19 @@ public class MAP_CTP extends MAP_FFA {
     private boolean endGame() {
         Team team = null;
         for (Area area : areas) {
-            if (team == null) {
-                team = area.team;
-            }
+            if (area.team != null) {
+                if (team == null) {
+                    team = area.team;
+                }
 
-            if (!team.equals(area.team)) {
-                return false;
-            }
+                if (!team.equals(area.team)) {
+                    return false;
+                }
 
-            if (area.capture < 100) {
+                if (area.capture < 100) {
+                    return false;
+                }
+            } else {
                 return false;
             }
         }
@@ -108,13 +113,17 @@ public class MAP_CTP extends MAP_FFA {
         for (Area area : areas) {
             area.setBlocked(false);
             Team team = null;
+            boolean isBlocked = false;
             for (BotBody2D bot: bots) {
                 if (area.isPointInZone(bot.getWorldPosition())){
-                    team = bot.BotTeam;
-                    if (!area.isBlocked)
-                        area.setBlocked(bot.BotTeam != area.team);
+                    if (team == null) {
+                        team = bot.getBotTeam();
+                    }
+
+                    isBlocked = isBlocked || team != bot.getBotTeam();
                 }
             }
+            area.setBlocked(isBlocked);
             area.doStep(team);
         }
     }

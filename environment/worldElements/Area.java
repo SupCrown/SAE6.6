@@ -23,7 +23,7 @@ public class Area extends TriggerZone {
     }
 
     public void doStep(Team team) {
-        if (!isBlocked) {
+        if (!isBlocked && team != null) {
             if (this.team == null) {
                 this.team = team;
                 this.color = team.getColor();
