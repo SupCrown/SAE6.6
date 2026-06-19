@@ -2,6 +2,10 @@ package androidgameserver.aicontrollers;
 
 import androidgameserver.bot.BotBody2D;
 
+/**
+ * IA aléatoire : tire de manière aléatoire et change de direction toutes les 200 ticks.
+ * Utile pour peupler rapidement l'arène avec des adversaires imprévisibles.
+ */
 public class AIRandom extends AIController{
 	
 	public AIRandom(BotBody2D b)

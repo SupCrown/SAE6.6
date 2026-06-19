@@ -35,6 +35,17 @@ import androidgameserver.environment.Environment2DMultiBot;
 import androidgameserver.environment.worldElements.PhysicalElement2D;
 import androidgameserver.environment.worldElements.Projectile;
 
+/**
+ * Bot de combat : étend {@link BotBody2D} avec un système de vies, de mort et de respawn.
+ * Actionneurs disponibles :
+ * <ul>
+ *   <li>{@code MotL} / {@code MotR} — moteurs différentiels gauche/droit</li>
+ *   <li>{@code GunTrig} — déclencheur du canon</li>
+ *   <li>{@code GunTrav} — traverse du canon (orientation du tir)</li>
+ * </ul>
+ * Le tir ami est géré via {@link androidgameserver.environment.Environment2DMultiBot#areAllies} :
+ * un projectile n'inflige des dégâts qu'à un bot d'une équipe différente.
+ */
 public class WarBot extends BotBody2D{
 	int score = 0;
     private int lives = AppDefines.maxLives;
@@ -90,12 +101,14 @@ public class WarBot extends BotBody2D{
         }
     }
 
+    /** Tue le bot : le désactive et planifie son respawn après {@link AppDefines#deathRespawnTime} ticks. */
     public void die(long currentTick) {
         dead = true;
         respawnTick = currentTick + AppDefines.deathRespawnTime;
         setActive(false);
     }
 
+    /** Remet le bot en vie avec ses vies initiales et le réactive dans le monde physique. */
     public void respawn() {
         lives = AppDefines.maxLives;
         dead = false;

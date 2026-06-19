@@ -1,5 +1,9 @@
 package androidgameserver;
 
+/**
+ * Constantes globales de configuration du serveur de jeu.
+ * Toutes les valeurs sont publiques et modifiables à chaud via la fenêtre d'options ({@link AppFrame}).
+ */
 public class AppDefines {
 
 	// ENVIRONMENT

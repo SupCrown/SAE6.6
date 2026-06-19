@@ -3,6 +3,11 @@ package androidgameserver;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Fenêtre de sélection du mode de jeu affichée au démarrage de l'application.
+ * Propose trois boutons (FFA, CTP, TDM) et délègue le lancement à
+ * {@link AndroidGameServer#startServerDirect()} ou {@link AndroidGameServer#startServerWithWaitingWindow(TeamWaitingWindow)}.
+ */
 public class GameModeMenu extends JFrame {
 
     public GameModeMenu() {
@@ -55,6 +60,11 @@ public class GameModeMenu extends JFrame {
         dmButton.addActionListener(e -> launchGame("TDM"));
     }
 
+    /**
+     * Ferme ce menu, mémorise le mode choisi et démarre le serveur.
+     * Le FFA démarre directement ; CTP et TDM attendent d'abord 2 joueurs minimum.
+     * @param mode identifiant du mode ("FFA", "CTP" ou "TDM")
+     */
     private void launchGame(String mode) {
         dispose();
 

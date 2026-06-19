@@ -15,7 +15,15 @@ import androidgameserver.bot.BotBody2D;
 import androidgameserver.bot.WarBot;
 import androidgameserver.environment.worldElements.Projectile;
 
-//ClientHandler class
+/**
+ * Thread réseau associé à un client connecté.
+ *
+ * À la connexion, {@link #joinGame()} crée et place un {@link BotBody2D} dans l'environnement.
+ * La boucle principale de {@link #run()} lit les lignes envoyées par le client et les délègue
+ * à {@link #processCommand(String)} qui met à jour les valeurs d'actionneurs du bot ou répond
+ * aux requêtes d'information sur l'environnement. La connexion est fermée proprement en cas
+ * d'inactivité (timeout), d'erreur réseau ou sur réception de la commande {@code EXIT}.
+ */
 public class ClientHandler implements Runnable{
 
 	private final Socket soc;
@@ -102,6 +110,12 @@ public class ClientHandler implements Runnable{
 		AndroidGameServer.getMap().removeBot(bot);
 	}
 
+	/**
+	 * Interprète une ligne de commandes reçue du client.
+	 * Plusieurs commandes peuvent être séparées par {@link AppDefines#commandSep} (#).
+	 * Les actionneurs connus sont mis à jour directement ; les requêtes d'information
+	 * accumulent une réponse envoyée en une seule fois en fin de méthode.
+	 */
 	private void processCommand(String received) throws IOException {
 		// "MotL" "MotR" "GunTrig"
 		String[] cut = received.split(AppDefines.commandSep);
@@ -182,6 +196,10 @@ public class ClientHandler implements Runnable{
 		return resp += msg;
 	}
 
+	/**
+	 * Crée le bot du client dans la carte et le place à une position valide.
+	 * @return {@code true} si le placement a réussi (partie pas pleine), {@code false} sinon.
+	 */
 	synchronized public boolean joinGame() {
 		connectionCount++;
 		AndroidGameServer.getMap().addBot(this);

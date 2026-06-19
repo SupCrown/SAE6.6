@@ -7,6 +7,12 @@ import org.jbox2d.common.Vec2;
 import java.awt.*;
 
 
+/**
+ * Zone de capture utilisée dans le mode CTP.
+ * Sa progression ({@code capture} de 0 à 100) augmente quand une seule équipe l'occupe
+ * et diminue en l'absence de bots. La zone est « bloquée » (figée, grisée) quand deux
+ * équipes adverses s'y trouvent en même temps.
+ */
 public class Area extends TriggerZone {
 
     public float capture;
@@ -22,6 +28,7 @@ public class Area extends TriggerZone {
         this.color = color;
     }
 
+    /** Met à jour la progression de capture selon l'équipe présente dans la zone ce tick. */
     public void doStep(Team team) {
         if (!isBlocked && team != null) {
             if (this.team == null) {

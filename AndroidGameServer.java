@@ -13,6 +13,16 @@ import androidgameserver.environment.maps.MAP_CTP;
 import androidgameserver.environment.maps.MAP_FFA;
 import androidgameserver.environment.maps.MAP_TDM;
 
+/**
+ * Point d'entrée de l'application et contrôleur principal du serveur de jeu.
+ *
+ * Responsabilités :
+ * - Afficher le menu de sélection du mode de jeu au démarrage.
+ * - Créer l'environnement de simulation (carte) selon le mode choisi.
+ * - Lancer le {@link ServerThread} qui accepte les connexions TCP.
+ * - Exécuter la boucle de simulation ({@link #runTask()}) dans le thread courant.
+ * - Fournir des méthodes statiques pour ajouter/supprimer des bots IA en cours de partie.
+ */
 public class AndroidGameServer {
 
 	static public boolean stop = false;
@@ -25,10 +35,11 @@ public class AndroidGameServer {
 
 	private static int port = 6969;
 	static ServerThread serv;
-	
+
 	protected static long timePrev = 0;
+	/** Délai minimal entre deux étapes de simulation (ms). 0 = pas de throttle. */
 	protected static float throttleDelay = 4;
-	
+
 	protected static ArrayList<AIController> ai = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -37,6 +48,12 @@ public class AndroidGameServer {
         });
     }
 	
+	/**
+	 * Boucle principale de simulation : exécute les étapes physiques et logiques
+	 * jusqu'à ce que {@code endTask} soit vrai ou qu'une interruption de répétition survienne.
+	 * Chaque itération appelle {@code preStepOps / doWorldStep / doStep / postStepOps}
+	 * sur la carte active et {@code doStep} sur chaque IA locale.
+	 */
 	public static void runTask()
 	{
 		map.preRunOps();
@@ -74,6 +91,7 @@ public class AndroidGameServer {
 		map.postRunOps();
 	}
 
+    /** Lance le serveur immédiatement (mode FFA) sans fenêtre d'attente. */
     public static void startServerDirect() {
         createAndShowGUI();
         createAndShowGame();
@@ -92,6 +110,10 @@ public class AndroidGameServer {
         return map.getBots().size();
     }
 
+    /**
+     * Lance le serveur en mode équipe : attend qu'au moins 2 joueurs soient connectés,
+     * décompte 10 secondes, puis ferme {@code window} et démarre la simulation.
+     */
     public static void startServerWithWaitingWindow(TeamWaitingWindow window) {
         createAndShowGUI();
 
@@ -168,6 +190,7 @@ public class AndroidGameServer {
 		return map;
 	}
 	
+	/** Ajoute un bot IA aléatoire ({@link AIRandom}) dans la carte courante. */
 	public static synchronized void addRandomAI()
 	{
 			BotBody2D bot;
@@ -185,6 +208,7 @@ public class AndroidGameServer {
 			}
 	}
 	
+	/** Ajoute un bot IA statique ({@link AIDumb}) dans la carte courante. */
 	public static synchronized void addDumbAI()
 	{
 		BotBody2D bot;
@@ -202,6 +226,7 @@ public class AndroidGameServer {
 		}
 	}
 	
+	/** Supprime tous les bots IA actuellement en jeu. */
 	public static synchronized void removeBots()
 	{
 		for(AIController a : ai)

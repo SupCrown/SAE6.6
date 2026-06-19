@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Mode Free For All : chaque bot combat seul contre tous.
+ * Chaque connexion crée une équipe individuelle à couleur aléatoire.
+ * Le classement est trié par score décroissant et affiché en temps réel dans la fenêtre de rendu.
+ * Un score limite optionnel ({@link AppDefines#scoreLimit}) met fin à la partie.
+ * Cette classe sert aussi de base aux autres modes (CTP, TDM) via l'héritage.
+ */
 public class MAP_FFA extends Environment2DMultiBot {
 	WarBot winner = null;
 

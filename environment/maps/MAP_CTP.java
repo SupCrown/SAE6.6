@@ -14,6 +14,12 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mode Capture the Points : deux équipes fixes (Rouge et Bleu) s'affrontent pour capturer
+ * deux zones (ALPHA et BETA). Une zone progresse vers 100 % quand une seule équipe l'occupe ;
+ * elle est bloquée (grisée) si les deux équipes s'y trouvent simultanément.
+ * La première équipe à contrôler les deux zones à 100 % gagne la partie.
+ */
 public class MAP_CTP extends MAP_FFA {
     public static final int AREA_RADIUS = 18;
     public List<Area> areas = new ArrayList<>();

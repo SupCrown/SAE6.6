@@ -14,7 +14,12 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-public class ServerThread extends Thread 
+/**
+ * Thread TCP du serveur : écoute sur un port fixe et crée un {@link ClientHandler}
+ * dans un nouveau thread pour chaque client qui se connecte.
+ * Affiche l'adresse IP locale au démarrage pour faciliter la connexion des bots.
+ */
+public class ServerThread extends Thread
 { 
 	int port;
     private int connectedPlayerCount = 0;

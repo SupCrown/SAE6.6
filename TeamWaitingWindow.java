@@ -3,6 +3,11 @@ package androidgameserver;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Fenêtre d'attente affichée avant le lancement d'une partie en mode équipe (CTP, TDM).
+ * Indique le nombre de joueurs connectés et le décompte avant le début.
+ * Se ferme automatiquement une fois le délai écoulé (voir {@link AndroidGameServer#startServerWithWaitingWindow}).
+ */
 public class TeamWaitingWindow extends JFrame {
 
     private String mode;

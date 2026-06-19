@@ -42,6 +42,12 @@ import androidgameserver.environment.worldElements.SituatedElement2D;
 import androidgameserver.environment.worldElements.TargetObject;
 import androidgameserver.environment.worldElements.WorldElement;
 
+/**
+ * Corps physique d'un bot dans le monde jBox2D.
+ * Maintient la liste des actionneurs, la valeur courante de chacun, le nom, le message affiché,
+ * l'équipe et le lien vers le {@link ClientHandler} réseau associé (ou null pour les IA locales).
+ * La sous-classe {@link WarBot} ajoute la logique de combat (vies, score, mort/respawn).
+ */
 public class BotBody2D extends WorldElement{
 	private boolean active = false;
 	public String name = "";
