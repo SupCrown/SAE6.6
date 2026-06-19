@@ -46,6 +46,9 @@ public class MAP_CTP extends MAP_FFA {
         return getWorld();
     }
 
+    /**
+     * Génére deux zones une cyan et une rose, éloignées de 3 fois le rayon d'une zone
+     */
     public void loadAreas() {
         // générer la première zone aléatoirement
         Vec2 firstAreaWP = generatePositionInBoundaries(AREA_RADIUS+2);
@@ -53,12 +56,18 @@ public class MAP_CTP extends MAP_FFA {
 
         // générer la deuxième zone sans qu'elle chevauche la première
         Vec2 secondAreaWP = generatePositionInBoundaries(AREA_RADIUS+2);
-        while (getDistanteBetween(firstAreaWP, secondAreaWP) <= AREA_RADIUS * 4){
+        while (getDistanteBetween(firstAreaWP, secondAreaWP) <= AREA_RADIUS * 3){
             secondAreaWP = generatePositionInBoundaries(AREA_RADIUS+2);
         }
         addArea(secondAreaWP, "BETA", Color.PINK);
     }
 
+    /**
+     * Ajoute une zone à une à la liste des zones et des éléments virtuels
+     * @param wp position de la zone
+     * @param label nom de la zone
+     * @param color couleur de la zone
+     */
     private void addArea(Vec2 wp, String label, Color color) {
         Area area = new Area(wp, AREA_RADIUS, label, color);
         areas.add(area);
@@ -74,11 +83,12 @@ public class MAP_CTP extends MAP_FFA {
         return smallest;
     }
 
-    public List<Area> getAreas()
-    {
-        return areas;
-    }
-
+    /**
+     * Calculer la distance entre deux points
+     * @param a premier point
+     * @param b deuxième point
+     * @return la distance entre les deux points
+     */
     public double getDistanteBetween(Vec2 a, Vec2 b) {
         return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 1));
     }
@@ -93,6 +103,10 @@ public class MAP_CTP extends MAP_FFA {
         }
     }
 
+    /**
+     * Regarde si les deux zones sont capturées à 100% par la même équipe
+     * @return true si toutes les zones sont capturées pa la même équipe
+     */
     private boolean endGame() {
         Team team = null;
         for (Area area : areas) {
@@ -115,6 +129,9 @@ public class MAP_CTP extends MAP_FFA {
         return team != null;
     }
 
+    /**
+     * Calcul l'état des zones et appel leur étape
+     */
     private void checkBotsPositions() {
         for (Area area : areas) {
             area.setBlocked(false);
