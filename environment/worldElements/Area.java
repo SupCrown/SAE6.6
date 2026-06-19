@@ -28,7 +28,7 @@ public class Area extends TriggerZone {
                 this.team = team;
                 this.color = team.getColor();
                 capture++;
-            } else if (this.team.equals(team)) {
+            } else if (this.team.equals(team) && capture < 100) {
                 capture++;
             } else {
                 if (--capture == 0) {

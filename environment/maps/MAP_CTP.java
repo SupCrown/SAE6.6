@@ -60,6 +60,28 @@ public class MAP_CTP extends MAP_FFA {
     public void postStepOps() {
         super.postStepOps();
         checkBotsPositions();
+        if (endGame()) {
+            setWinMessage(areas.getFirst().team.getTeamName() + " wins !");
+            paused = true;
+        }
+    }
+
+    private boolean endGame() {
+        Team team = null;
+        for (Area area : areas) {
+            if (team == null) {
+                team = area.team;
+            }
+
+            if (!team.equals(area.team)) {
+                return false;
+            }
+
+            if (area.capture < 100) {
+                return false;
+            }
+        }
+        return team != null;
     }
 
     private void checkBotsPositions() {
