@@ -42,6 +42,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import androidgameserver.bot.WarBot;
+import androidgameserver.environment.worldElements.*;
 import org.jbox2d.common.Mat22;
 import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
@@ -52,17 +53,6 @@ import androidgameserver.bot.elements.Actuator;
 
 import androidgameserver.environment.Environment2D;
 import androidgameserver.environment.Environment2DMultiBot;
-import androidgameserver.environment.worldElements.Debris;
-import androidgameserver.environment.worldElements.MovingObstacle;
-import androidgameserver.environment.worldElements.ObstacleMovingBox;
-import androidgameserver.environment.worldElements.ObstacleStaticBox;
-import androidgameserver.environment.worldElements.ObstacleStaticCyninder;
-import androidgameserver.environment.worldElements.Projectile;
-import androidgameserver.environment.worldElements.TargetObject;
-import androidgameserver.environment.worldElements.TriggerZone;
-import androidgameserver.environment.worldElements.VirtualWorldElement;
-import androidgameserver.environment.worldElements.Waypoint;
-import androidgameserver.environment.worldElements.WorldElement;
 
 public class Env2DViewer extends JPanel{
 	private static final long serialVersionUID = -5562812187406952123L;
@@ -445,7 +435,10 @@ public class Env2DViewer extends JPanel{
 			{
 				drawStaticBox(g,(TriggerZone)we, ((TriggerZone) we).color);
 				g.drawString(((TriggerZone)we).name, toPix(((TriggerZone)we).worldPosition.x-((TriggerZone)we).size)+offsetX, toPix(((TriggerZone)we).worldPosition.y-((TriggerZone)we).size)+offsetY);
-			}
+			    if (we instanceof Area) {
+                    drawCaptureBar(g, (Area)we, ((Area) we).color);
+                }
+            }
 			else if(we instanceof TargetObject)
 				drawCircle(g,(WorldElement)we,((WorldElement)we).getColor());
 			else if(we instanceof Projectile)
@@ -504,16 +497,32 @@ public class Env2DViewer extends JPanel{
 		for(int i = 0 ; i < 4 ; i++)
 			points[i].set(we.getWorldPoint(points[i]));
 
-		 g.drawLine(toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY,toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY);
-		 g.drawLine(toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY,toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY);
-		 g.drawLine(toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY,toPix(points[3].x)+offsetX, toPix(points[3].y)+offsetY);
-		 g.drawLine(toPix(points[3].x)+offsetX, toPix(points[3].y)+offsetY,toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY);
-		 if(fill)
-		 {
-			 g.drawLine(toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY,toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY);
-			 g.drawLine(toPix(points[3].x)+offsetX, toPix(points[3].y)+offsetY,toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY);
-		 }
+        g.drawLine(toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY,toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY);
+        g.drawLine(toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY,toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY);
+        g.drawLine(toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY,toPix(points[3].x)+offsetX, toPix(points[3].y)+offsetY);
+        g.drawLine(toPix(points[3].x)+offsetX, toPix(points[3].y)+offsetY,toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY);
+        if(fill)
+        {
+            g.drawLine(toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY,toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY);
+            g.drawLine(toPix(points[3].x)+offsetX, toPix(points[3].y)+offsetY,toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY);
+        }
 	}
+
+    private void drawCaptureBar(Graphics g, Area a, Color c) {
+        g.setColor(c);
+        Vec2 points[] = new Vec2[3];
+        points[0] = new Vec2(- a.size,-a.size - 6);
+        points[1] = new Vec2(a.capture / 5.0f - a.size , - a.size - 6);
+        points[2] = new Vec2(20 - a.size,-a.size - 6);
+
+        for(int i = 0 ; i < 3 ; i++)
+            points[i].set(a.getWorldPoint(points[i]));
+
+        if (a.capture > 0)
+            g.drawLine(toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY,toPix(points[1].x)+offsetX, toPix(points[1].y)+offsetY);
+        g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 120));
+        g.drawLine(toPix(points[0].x)+offsetX, toPix(points[0].y)+offsetY,toPix(points[2].x)+offsetX, toPix(points[2].y)+offsetY);
+    }
 
 	private void drawBorders(Graphics g) {
 		 g.setColor(ColorTheme.obstacleColor);
